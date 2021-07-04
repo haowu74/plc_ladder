@@ -3,10 +3,108 @@
         <title>
             PLC Ladder Demo
         </title>
+        <script src="./jquery-3.6.0.js"></script>
+        <script src="./bootstrap.bundle.min.js"></script>
+        <link href="bootstrap.min.css" rel="stylesheet">
+        <link href="./ladder.css" rel="stylesheet">
         <script src="./ladder.js"></script>
-        <script src=:jquery-3.6.0.js></script>
     </head>
     <body>
+        <div>
+            <tr>
+                <td>Select a File to Load:</td>
+                <td><input type="file" id="json_file"></td>
+                <td><button onclick="loadFileAsJson()">Load Selected File</button><td>
+            </tr>
+        </div>
 
+        <div class="logic">
+            <div class="power-pos"></div>
+            <div class="rungs">
+                <div class="rung" draggable="true">
+                    <div class="short-wire">
+                        <div class="wire-visible"></div>
+                    </div>
+                    <div class="branch-logic" draggable="true">
+                        <div class="short-wire">
+                            <div class="wire-visible"></div>
+                        </div>
+                        <div class="branch-vertical" style="height: 60px;"></div>
+                        <div class="branch-rungs">
+                            <div class="rung" draggable="true">
+                                <div class="short-wire">
+                                    <div class="wire-visible"></div>
+                                </div>
+                                <div class="ladder-element" draggable="true">
+                                    <div class="ladder-element-bool">
+                                        <select class="variable-select">
+                                            <option value="" disabled="" hidden="">Variable</option>
+                                            <option value="0">Start Button</option>
+                                            <option value="1">Stop Button</option>
+                                            <option value="2">Motor</option>
+                                        </select>
+                                        <div class="circuit-element">
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="xic"></div>
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wire">
+                                    <div class="wire-visible"></div>
+                                </div>
+                                <div class="short-wire">
+                                    <div class="wire-visible"></div>
+                                </div>
+                            </div>
+                            <div class="rung" draggable="true">
+                                <div class="short-wire">
+                                    <div class="wire-visible"></div>
+                                </div>
+                                <div class="ladder-element" draggable="true">
+                                    <div class="ladder-element-bool">
+                                        <select class="variable-select">
+                                            <option value="" disabled="" hidden="">Variable</option>
+                                            <option value="0">Start Button</option>
+                                            <option value="1">Stop Button</option>
+                                            <option value="2">Motor</option>
+                                        </select>
+                                        <div class="circuit-element">
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="xic"></div>
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wire">
+                                    <div class="wire-visible"></div>
+                                </div>
+                                <div class="short-wire">
+                                    <div class="wire-visible"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="branch-vertical" style="height: 60px;"></div>
+                        <div class="short-wire">
+                            <div class="wire-visible"></div>
+                        </div>
+                    </div>
+                    <div class="ladder-element" draggable="true"><div class="ladder-element-bool"><select class="variable-select"><option value="" disabled="" hidden="">Variable</option><option value="0">Start Button</option><option value="1">Stop Button</option><option value="2">Motor</option></select><div class="circuit-element"><div class="wire"><div class="wire-visible"></div></div><div class="xio energized"></div><div class="wire"><div class="wire-visible"></div></div></div></div></div>
+                    <div class="wire"><div class="wire-visible"></div></div>
+                    <div class="ladder-element" draggable="true"><div class="ladder-element-bool"><select class="variable-select"><option value="" disabled="" hidden="">Variable</option><option value="0">Start Button</option><option value="1">Stop Button</option><option value="2">Motor</option></select><div class="circuit-element"><div class="wire"><div class="wire-visible"></div></div><div class="ote"></div><div class="wire"><div class="wire-visible"></div></div></div></div></div>
+                    <div class="short-wire"><div class="wire-visible"></div></div>
+                </div>
+                <div class="rung" draggable="true"><div class="short-wire"><div class="wire-visible"></div></div><div class="wire"><div class="wire-visible"></div></div><div class="short-wire"><div class="wire-visible"></div></div></div>
+            </div>
+            <div class="power-neg"></div>
+        </div>
     </body>
 </html>
