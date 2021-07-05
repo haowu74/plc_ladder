@@ -14,7 +14,7 @@
                     <div class="vertical-wrapper">
                         <div class="toolbox">
                             <div class="tools">
-                                <div class="ladder-element" draggable="true">
+                                <div class="ladder-element xic-template" draggable="true">
                                     <div class="ladder-element-bool">
                                         <select class="variable-select" disabled="">
                                             <option value="" disabled="" hidden="">Variable</option>
@@ -30,9 +30,71 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ladder-element" draggable="true"><div class="ladder-element-bool"><select class="variable-select" disabled=""><option value="" disabled="" hidden="">Variable</option></select><div class="circuit-element"><div class="wire"><div class="wire-visible"></div></div><div class="xio"></div><div class="wire"><div class="wire-visible"></div></div></div></div></div>
-                                <div class="ladder-element" draggable="true"><div class="ladder-element-bool"><select class="variable-select" disabled=""><option value="" disabled="" hidden="">Variable</option></select><div class="circuit-element"><div class="wire"><div class="wire-visible"></div></div><div class="ote"></div><div class="wire"><div class="wire-visible"></div></div></div></div></div>
-                                <div class="branch-logic" draggable="true"><div class="short-wire"><div class="wire-visible"></div></div><div class="branch-vertical" style="height: 58px;"></div><div class="branch-rungs"><div class="rung" draggable="true"><div class="short-wire"><div class="wire-visible"></div></div><div class="wire"><div class="wire-visible"></div></div><div class="short-wire"><div class="wire-visible"></div></div></div><div class="rung" draggable="true"><div class="short-wire"><div class="wire-visible"></div></div><div class="wire"><div class="wire-visible"></div></div><div class="short-wire"><div class="wire-visible"></div></div></div></div><div class="branch-vertical" style="height: 58px;"></div><div class="short-wire"><div class="wire-visible"></div></div></div>
+                                <div class="ladder-element xio-template" draggable="true">
+                                    <div class="ladder-element-bool">
+                                        <select class="variable-select" disabled="">
+                                            <option value="" disabled="" hidden="">Variable</option>
+                                        </select>
+                                        <div class="circuit-element">
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="xio"></div>
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ladder-element ote-template" draggable="true">
+                                    <div class="ladder-element-bool">
+                                        <select class="variable-select" disabled="">
+                                            <option value="" disabled="" hidden="">Variable</option>
+                                        </select><div class="circuit-element">
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="ote"></div>
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="branch-logic branch-template" draggable="true">
+                                    <div class="short-wire">
+                                        <div class="wire-visible"></div>
+                                    </div>
+                                    <div class="branch-vertical" style="height: 58px;"></div>
+                                    <div class="branch-rungs">
+                                        <div class="rung">
+                                            <div class="short-wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="short-wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                        </div>
+                                        <div class="rung">
+                                            <div class="short-wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                            <div class="short-wire">
+                                                <div class="wire-visible"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="branch-vertical" style="height: 58px;"></div>
+                                    <div class="short-wire">
+                                        <div class="wire-visible"></div>
+                                    </div>
+                                </div>
                                 <button onclick="addRung()">Add Rung</button>
                                 <button onclick="readFromJson()">Load</button>
                                 <input type="file" id="json_file" accept=".json" hidden>
@@ -128,6 +190,40 @@
                                     <div class="short-wire">
                                         <div class="wire-visible"></div>
                                     </div>
+                                    <div class="branch-logic" draggable="true">
+                                        <div class="short-wire">
+                                            <div class="wire-visible"></div>
+                                        </div>
+                                        <div class="branch-vertical" style="height: 60px;"></div>
+                                        <div class="branch-rungs">
+                                            <div class="rung" draggable="true">
+                                                <div class="short-wire">
+                                                    <div class="wire-visible"></div>
+                                                </div>
+                                                <div class="wire">
+                                                    <div class="wire-visible"></div>
+                                                </div>
+                                                <div class="short-wire">
+                                                    <div class="wire-visible"></div>
+                                                </div>
+                                            </div>
+                                            <div class="rung" draggable="true">
+                                                <div class="short-wire">
+                                                    <div class="wire-visible"></div>
+                                                </div>
+                                                <div class="wire">
+                                                    <div class="wire-visible"></div>
+                                                </div>
+                                                <div class="short-wire">
+                                                    <div class="wire-visible"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="branch-vertical" style="height: 60px;"></div>
+                                        <div class="short-wire">
+                                            <div class="wire-visible"></div>
+                                        </div>
+                                    </div>
                                     <div class="wire">
                                         <div class="wire-visible"></div>
                                     </div>
@@ -143,6 +239,5 @@
             </div>
         </div>
         <script src="./ladder.js"></script>
-
     </body>
 </html>
