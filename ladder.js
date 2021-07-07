@@ -107,26 +107,6 @@ const branchTemplate =
   "</div>" +
   "</div>";
 
-async function readFromJson() {
-  $("#json_file").trigger("click");
-  do {
-    var fileToLoad = document.getElementById("json_file").files[0];
-    // console.log(fileToLoad);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  } while (fileToLoad === undefined);
-
-  var fileReader = new FileReader();
-  fileReader.onload = function (fileLoadedEvent) {
-    var textFromFileLoaded = fileLoadedEvent.target.result;
-    jsonObject = JSON.parse(textFromFileLoaded);
-    console.log(jsonObject);
-  };
-
-  fileReader.readAsText(fileToLoad, "UTF-8");
-}
-
-function saveToJson() {}
-
 function addRung() {
   $(".rungs").append(rungTemplate);
 }
@@ -263,3 +243,79 @@ $(".logic > .rungs > .rung > .wire").on("drop", function (event) {
 
 // Document ready
 $.ready(function () {});
+
+async function readFromJson() {
+  $("#json_file").trigger("click");
+  do {
+    var fileToLoad = document.getElementById("json_file").files[0];
+    // console.log(fileToLoad);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  } while (fileToLoad === undefined);
+
+  var fileReader = new FileReader();
+  fileReader.onload = function (fileLoadedEvent) {
+    var textFromFileLoaded = fileLoadedEvent.target.result;
+    jsonObject = JSON.parse(textFromFileLoaded);
+    console.log(jsonObject);
+
+    renderJson(jsonObject);
+  };
+
+  fileReader.readAsText(fileToLoad, "UTF-8");
+}
+
+function renderJson(json) {
+  $(".rungs").empty();
+  for (r in json.rung) {
+    // console.log(rung, json.rung[r]);
+    var rung = renderRung(json.rung[r]);
+    $(".rungs").append(rung);
+  }
+}
+
+function renderRung(json) {
+var rung = rungTemplate;
+  for (var key in json) {
+    switch (key) {
+      case "and":
+        renderAnd(json[key])
+        break;
+      case "or":
+        renderOr(json[key])
+        break;
+      case "not":
+        renderNot(json[key]) 
+        break;
+      case "=":
+        renderAssign(json[key])
+        break;
+      default:
+        break;
+    }
+  }
+  return rung; 
+}
+
+function renderAnd(json) {
+    console.log(json);
+    for (var i in json) {
+
+    }
+}
+
+function renderOr(json) {
+    console.log(json);
+
+}
+
+function renderNot(json) {
+    console.log(json);
+
+}
+
+function renderAssign(json) {
+    console.log(json);
+
+}
+
+function saveToJson() {}
