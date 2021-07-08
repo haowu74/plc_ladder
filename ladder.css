@@ -520,14 +520,21 @@ input{
 }
 
 .ladder-element-number .short-wire{
-    margin-top:48px
+    margin-top:48pxpointer-events:none
 }
 
-.ladder-element select{
+.ladder-element select, .tag-name{
     margin:5px;
     height:30px;
     line-height:30px;
     background:#f4f4f4
+}
+
+.tag-name{
+    width: 68px;
+    text-align: center;
+    border: 0px;
+    pointer-events:none
 }
 
 .ladder-element-number-inner{

@@ -22,9 +22,7 @@ const rungTemplate =
 const xicTemplate =
   '<div class="ladder-element xic-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
-  '<select class="variable-select" disabled="">' +
-  '<option value="" disabled="" hidden="">Variable</option>' +
-  "</select>" +
+  '<input type="text" value="Variable" class="tag-name"></input>' +
   '<div class="circuit-element">' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
@@ -40,9 +38,7 @@ const xicTemplate =
 const xioTemplate =
   '<div class="ladder-element xio-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
-  '<select class="variable-select" disabled="">' +
-  '<option value="" disabled="" hidden="">Variable</option>' +
-  "</select>" +
+  '<input type="text" value="Variable" class="tag-name"></input>' +
   '<div class="circuit-element">' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
@@ -57,9 +53,7 @@ const xioTemplate =
 const oteTemplate =
   '<div class="ladder-element ote-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
-  '<select class="variable-select" disabled="">' +
-  '<option value="" disabled="" hidden="">Variable</option>' +
-  '</select><div class="circuit-element">' +
+  '<input type="text" value="Variable" class="tag-name"></input>' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
@@ -138,145 +132,177 @@ $(".trash").on("drop", function (event) {
 
 // Move objects to the contact
 
-$(document).on("dragenter", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire", function (event) {
-  $(this).css("outline", "2px dashed blue");
-});
-
-$(document).on("dragleave", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire", function (event) {
-  $(this).css("outline", "");
-});
-
-$(document).on("dragover", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire", function (event) {
-  event.preventDefault();
-});
-
-$(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire-left", function (event) {
-  var cloned = dragged.cloneNode(true);
-  if ($(cloned).hasClass("xic-template")) {
-    $(cloned).removeClass("xic-template");
-    $(this).parent().parent().parent().before(cloned);
-  } else if ($(cloned).hasClass("xio-template")) {
-    $(cloned).removeClass("xio-template");
-    $(this).parent().parent().parent().before(cloned);
-  }
-  dragged = null;
-  $(this).css("outline", "");
-});
-
-$(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire-right", function (event) {
-  var cloned = dragged.cloneNode(true);
-  if ($(cloned).hasClass("xic-template")) {
-    $(cloned).removeClass("xic-template");
-    $(this).parent().parent().parent().after(cloned);
-  } else if ($(cloned).hasClass("xio-template")) {
-    $(cloned).removeClass("xio-template");
-    $(this).parent().parent().parent().after(cloned);
-  }
-  dragged = null;
-  $(this).css("outline", "");
-});
-
-// Add parallel rung onto a contact
-
-$(document).on("dragenter", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
-function(event) {
-    if ($(dragged).hasClass('branch-template')) {
-        $(this).css("outline", "2px dashed blue");
-    }
-});
-
-$(document).on("dragleave", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
-function(event) {
-    if ($(dragged).hasClass('branch-template')) {
-        $(this).css("outline", "");
-    }
-});
-
-$(document).on("dragover", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
-function(event) {
-    if ($(dragged).hasClass('branch-template')) {
-        event.preventDefault();
-    }
-});
-
-$(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
-function(event) {
-    if ($(dragged).hasClass('branch-template')) {
-        var cloned = dragged.cloneNode(true);
-        dragged = null;
-        $(this).css("outline", "");
-        var s = $(this).parent().parent().parent().parent();
-        var branch = branchTemplate;
-        var contact = $(s).html();
-        $(this).parent().parent().parent().replaceWith(branch);
-        $(s).find(".wire-left:eq(1)").after(contact);
-
-        // $(this).parent().parent().parent().find('.branch-rungs').append('<div class="rung">' +
-        // '<div class="short-wire wire-left">' +
-        // '<div class="wire-visible"></div>' +
-        // "</div>" +
-        // '<div class="wire">' +
-        // '<div class="wire-visible"></div>' +
-        // "</div>" +
-        // '<div class="short-wire wire-right">' +
-        // '<div class="wire-visible"></div>' +
-        // "</div>" +
-        // "</div>" +
-        // "</div>");  
-        // const height = $(this).parent().parent().parent().find('.branch-vertical').height();
-        // $(this).parent().parent().parent().find('.branch-vertical').height(height + 58);
-        escalateBranchVertical($(s), 58);
-    }
-
-});
-
-// Move objects to the branch
-
 $(document).on(
-  "dragenter", ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  "dragenter",
+  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire",
   function (event) {
     $(this).css("outline", "2px dashed blue");
   }
 );
 
 $(document).on(
-  "dragleave", ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  "dragleave",
+  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire",
   function (event) {
     $(this).css("outline", "");
   }
 );
 
 $(document).on(
-  "dragover", ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  "dragover",
+  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire",
   function (event) {
     event.preventDefault();
   }
 );
 
 $(document).on(
-  "drop", ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  "drop",
+  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire-left",
+  function (event) {
+    var cloned = dragged.cloneNode(true);
+    if ($(cloned).hasClass("xic-template")) {
+      $(cloned).removeClass("xic-template");
+      $(this).parent().parent().parent().before(cloned);
+    } else if ($(cloned).hasClass("xio-template")) {
+      $(cloned).removeClass("xio-template");
+      $(this).parent().parent().parent().before(cloned);
+    }
+    dragged = null;
+    $(this).css("outline", "");
+  }
+);
+
+$(document).on(
+  "drop",
+  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire-right",
+  function (event) {
+    var cloned = dragged.cloneNode(true);
+    if ($(cloned).hasClass("xic-template")) {
+      $(cloned).removeClass("xic-template");
+      $(this).parent().parent().parent().after(cloned);
+    } else if ($(cloned).hasClass("xio-template")) {
+      $(cloned).removeClass("xio-template");
+      $(this).parent().parent().parent().after(cloned);
+    }
+    dragged = null;
+    $(this).css("outline", "");
+  }
+);
+
+// Add parallel rung onto a contact
+
+$(document).on(
+  "dragenter",
+  ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
+  function (event) {
+    if ($(dragged).hasClass("branch-template")) {
+      $(this).css("outline", "2px dashed blue");
+    }
+  }
+);
+
+$(document).on(
+  "dragleave",
+  ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
+  function (event) {
+    if ($(dragged).hasClass("branch-template")) {
+      $(this).css("outline", "");
+    }
+  }
+);
+
+$(document).on(
+  "dragover",
+  ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
+  function (event) {
+    if ($(dragged).hasClass("branch-template")) {
+      event.preventDefault();
+    }
+  }
+);
+
+$(document).on(
+  "drop",
+  ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
+  function (event) {
+    if ($(dragged).hasClass("branch-template")) {
+      var cloned = dragged.cloneNode(true);
+      dragged = null;
+      $(this).css("outline", "");
+      // var s = $(this).parent().parent().parent().parent();
+      // var branch = branchTemplate;
+      // var contact = $(s).html();
+      // $(this).parent().parent().parent().replaceWith(branch);
+      // $(s).find(".wire-left:eq(1)").after(contact);
+
+      // escalateBranchVertical($(s), 58);
+    }
+  }
+);
+
+// Move objects to the branch
+
+$(document).on(
+  "dragenter",
+  ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  function (event) {
+    $(this).css("outline", "2px dashed blue");
+  }
+);
+
+$(document).on(
+  "dragleave",
+  ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  function (event) {
+    $(this).css("outline", "");
+  }
+);
+
+$(document).on(
+  "dragover",
+  ".logic .branch-logic > .branch-rungs > .rung > .wire",
+  function (event) {
+    event.preventDefault();
+  }
+);
+
+$(document).on(
+  "drop",
+  ".logic .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     var cloned = dragged.cloneNode(true);
 
     if ($(cloned).hasClass("branch-template")) {
-        $(this).parent().parent().parent().find('.branch-rungs').append('<div class="rung">' +
-        '<div class="short-wire wire-left">' +
-        '<div class="wire-visible"></div>' +
-        "</div>" +
-        '<div class="wire">' +
-        '<div class="wire-visible"></div>' +
-        "</div>" +
-        '<div class="short-wire wire-right">' +
-        '<div class="wire-visible"></div>' +
-        "</div>" +
-        "</div>" +
-        "</div>");  
-        const height = $(this).parent().parent().parent().find('.branch-vertical').height();
-
-        $(this).parent().parent().parent().find('.branch-vertical').height(height + 60);
+      if ($(this).parent().is(":last-child")) {
+        $(this)
+          .parent()
+          .parent()
+          .parent()
+          .find(".branch-rungs")
+          .append(
+            '<div class="rung">' +
+              '<div class="short-wire wire-left">' +
+              '<div class="wire-visible"></div>' +
+              "</div>" +
+              '<div class="wire">' +
+              '<div class="wire-visible"></div>' +
+              "</div>" +
+              '<div class="short-wire wire-right">' +
+              '<div class="wire-visible"></div>' +
+              "</div>" +
+              "</div>" +
+              "</div>"
+          );
+        escalateBranchVertical($(this), 58);
       } else {
-        $(this).before(cloned);
+        // sub branch on this branch
+        escalateBranchVertical($(this), 58);
+        $(this).after(branchTemplate);
       }
+    } else {
+      $(this).before(cloned);
+    }
 
     dragged = null;
     $(this).css("outline", "");
@@ -284,15 +310,23 @@ $(document).on(
 );
 
 // Move objects to the rung
-$(document).on("dragenter", ".logic > .rungs > .rung > .wire", function (event) {
-  $(this).css("outline", "2px dashed blue");
-});
+$(document).on(
+  "dragenter",
+  ".logic > .rungs > .rung > .wire",
+  function (event) {
+    $(this).css("outline", "2px dashed blue");
+  }
+);
 
-$(document).on("dragleave", ".logic > .rungs > .rung > .wire", function (event) {
-  $(this).css("outline", "");
-});
+$(document).on(
+  "dragleave",
+  ".logic > .rungs > .rung > .wire",
+  function (event) {
+    $(this).css("outline", "");
+  }
+);
 
-$(document).on("dragover", ".logic > .rungs > .rung > .wire",function (event) {
+$(document).on("dragover", ".logic > .rungs > .rung > .wire", function (event) {
   event.preventDefault();
 });
 
@@ -300,7 +334,10 @@ $(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("ote-template")) {
     $(this).after(cloned);
-  } else if ($(cloned).hasClass("xic-template") || $(cloned).hasClass("xio-template")) {
+  } else if (
+    $(cloned).hasClass("xic-template") ||
+    $(cloned).hasClass("xio-template")
+  ) {
     $(this).before(cloned);
   } else if ($(cloned).hasClass("branch-template")) {
     $(this).before(cloned);
@@ -342,7 +379,7 @@ function renderJson(json) {
 }
 
 function renderRung(json) {
-var rung = $(rungTemplate).clone();
+  var rung = $(rungTemplate).clone();
   for (var key in json) {
     switch (key) {
       case "and":
@@ -350,10 +387,10 @@ var rung = $(rungTemplate).clone();
         $(rung).prepend(temp);
         break;
       case "or":
-        renderOr(json[key])
+        renderOr(json[key]);
         break;
       case "not":
-        renderNot(json[key]) 
+        renderNot(json[key]);
         break;
       case "=":
         var temp = renderAssign(json[key]);
@@ -363,60 +400,63 @@ var rung = $(rungTemplate).clone();
         break;
     }
   }
-  return rung; 
+  return rung;
 }
 
 function renderAnd(json) {
-    var s = '';
-    for (var i in json) {
-        if (typeof(json[i]) === 'string') {
-            s += xicTemplate;
-        } else {
-            for (var j in json[i]) {
-                if (j === 'not') {
-                    s += xioTemplate;
-                } else if (j === 'or') {
-                    s1 = renderOr(json[i][j]);
-                    s += s1;
-                }
-            }
+  var s = "";
+  for (var i in json) {
+    if (typeof json[i] === "string") {
+      s += xicTemplate;
+    } else {
+      for (var j in json[i]) {
+        if (j === "not") {
+          s += xioTemplate;
+        } else if (j === "or") {
+          s1 = renderOr(json[i][j]);
+          s += s1;
         }
+      }
     }
-    return s;
+  }
+  return s;
 }
 
 function renderOr(json) {
-    var s = $("<div></div>");
-    s.append(branchTemplate);
-    for (var i in json) {
-        if (typeof(json[i]) === 'string') {
-            
-        }
+  var s = $("<div></div>");
+  s.append(branchTemplate);
+  for (var i in json) {
+    if (typeof json[i] === "string") {
     }
-    return s.html();
+  }
+  return s.html();
 }
 
 function renderNot(json) {
-    console.log(json);
-
+  console.log(json);
 }
 
 // escalate the change of height of the branch vertical links
 
 function escalateBranchVertical(element, expand) {
-    var height = $(element).parent().siblings(".branch-vertical").height();
-    $(element).parent().siblings(".branch-vertical").height(height + expand);
+  $(element)
+    .parentsUntil(".rungs")
+    .siblings(".branch-vertical")
+    .each(function (index, node) {
+      height = $(node).height();
+      $(node).height(height + expand);
+    });
 }
 
 function renderAssign(json) {
-    console.log(json);
-    var s = document.createElement("div");
-    if (typeof(json) === 'string') {
-        $(s).append(oteTemplate);
-    }
-    // console.log(s);
+  console.log(json);
+  var s = document.createElement("div");
+  if (typeof json === "string") {
+    $(s).append(oteTemplate);
+  }
+  // console.log(s);
 
-    return s.innerHTML;
+  return s.innerHTML;
 }
 
 function saveToJson() {}
