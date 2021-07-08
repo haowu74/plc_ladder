@@ -138,27 +138,19 @@ $(".trash").on("drop", function (event) {
 
 // Move objects to the contact
 
-$(
-  ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire"
-).on("dragenter", function (event) {
+$(document).on("dragenter", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire", function (event) {
   $(this).css("outline", "2px dashed blue");
 });
 
-$(
-  ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire"
-).on("dragleave", function (event) {
+$(document).on("dragleave", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire", function (event) {
   $(this).css("outline", "");
 });
 
-$(
-  ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire"
-).on("dragover", function (event) {
+$(document).on("dragover", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire", function (event) {
   event.preventDefault();
 });
 
-$(
-  ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire-left"
-).on("drop", function (event) {
+$(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire-left", function (event) {
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("xic-template")) {
     $(cloned).removeClass("xic-template");
@@ -170,9 +162,7 @@ $(
   $(this).css("outline", "");
 });
 
-$(
-  ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire-right"
-).on("drop", function (event) {
+$(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .wire-right", function (event) {
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("xic-template")) {
     $(cloned).removeClass("xic-template");
@@ -186,29 +176,29 @@ $(
 
 // Move objects to the branch
 
-$(".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire").on(
-  "dragenter",
+$(document).on(
+  "dragenter", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     $(this).css("outline", "2px dashed blue");
   }
 );
 
-$(".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire").on(
-  "dragleave",
+$(document).on(
+  "dragleave", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     $(this).css("outline", "");
   }
 );
 
-$(".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire").on(
-  "dragover",
+$(document).on(
+  "dragover", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     event.preventDefault();
   }
 );
 
-$(".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire").on(
-  "drop",
+$(document).on(
+  "drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     var cloned = dragged.cloneNode(true);
     $(this).before(cloned);
@@ -218,19 +208,19 @@ $(".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire").on(
 );
 
 // Move objects to the rung
-$(".logic > .rungs > .rung > .wire").on("dragenter", function (event) {
+$(document).on("dragenter", ".logic > .rungs > .rung > .wire", function (event) {
   $(this).css("outline", "2px dashed blue");
 });
 
-$(".logic > .rungs > .rung > .wire").on("dragleave", function (event) {
+$(document).on("dragleave", ".logic > .rungs > .rung > .wire", function (event) {
   $(this).css("outline", "");
 });
 
-$(".logic > .rungs > .rung > .wire").on("dragover", function (event) {
+$(document).on("dragover", ".logic > .rungs > .rung > .wire",function (event) {
   event.preventDefault();
 });
 
-$(".logic > .rungs > .rung > .wire").on("drop", function (event) {
+$(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("ote-template")) {
     $(this).after(cloned);
@@ -274,11 +264,12 @@ function renderJson(json) {
 }
 
 function renderRung(json) {
-var rung = rungTemplate;
+var rung = $(rungTemplate).clone();
   for (var key in json) {
     switch (key) {
       case "and":
-        renderAnd(json[key])
+        var temp = renderAnd(json[key]);
+        $(rung).prepend(temp);
         break;
       case "or":
         renderOr(json[key])
@@ -287,7 +278,8 @@ var rung = rungTemplate;
         renderNot(json[key]) 
         break;
       case "=":
-        renderAssign(json[key])
+        var temp = renderAssign(json[key]);
+        $(rung).append(temp);
         break;
       default:
         break;
@@ -297,10 +289,16 @@ var rung = rungTemplate;
 }
 
 function renderAnd(json) {
-    console.log(json);
+    var s = '';
     for (var i in json) {
-
+        if (typeof(json[i]) === 'string') {
+            s += xicTemplate;
+        } else {
+            
+        }
     }
+
+    return s;
 }
 
 function renderOr(json) {
@@ -315,7 +313,13 @@ function renderNot(json) {
 
 function renderAssign(json) {
     console.log(json);
+    var s = document.createElement("div");
+    if (typeof(json) === 'string') {
+        $(s).append(oteTemplate);
+    }
+    // console.log(s);
 
+    return s.innerHTML;
 }
 
 function saveToJson() {}

@@ -2,3 +2,6 @@ css/
 js/
 bootstrap.*
 sample.js
+jquery-*
+main_origin.js
+sample_and.json

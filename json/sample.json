@@ -54,7 +54,7 @@
         {
             "id": 5,
             "comment": "y5 = x1",
-            "and": "x1",
+            "and": ["x1"],
             "=": "y5" 
         },
         {
@@ -121,7 +121,7 @@
         {
             "id": 10,
             "comment": "y10 is the negate coil: (not y10) = x10",
-            "and": "x10",
+            "and": ["x10"],
             "=": 
             {
                 "not": "y10"
@@ -130,7 +130,7 @@
         {
             "id": 11,
             "comment": "a rung can have multiple coils",
-            "and": "x11",
+            "and": ["x11"],
             "=": [
                 "y11",
                 "y12",
