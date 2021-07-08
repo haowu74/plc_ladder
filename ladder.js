@@ -66,7 +66,7 @@ const oteTemplate =
   "</div>";
 
 const branchTemplate =
-  '<div class="branch-logic branch-template" draggable="true">' +
+  '<div class="branch-logic branch-template" draggable="true" data-level="2">' +
   '<div class="short-wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
@@ -279,7 +279,7 @@ $(document).on(
           .parent()
           .parent()
           .parent()
-          .find(".branch-rungs")
+          .children(".branch-rungs").first()
           .append(
             '<div class="rung">' +
               '<div class="short-wire wire-left">' +
@@ -439,12 +439,31 @@ function renderNot(json) {
 // escalate the change of height of the branch vertical links
 
 function escalateBranchVertical(element, expand) {
-  $(element)
-    .parentsUntil(".rungs")
-    .siblings(".branch-vertical")
-    .each(function (index, node) {
-      height = $(node).height();
-      $(node).height(height + expand);
+    var toExpand = true;
+    $(element).siblings(".branch-logic").each(function(index, node) {
+        if ($(node).data("level") >=2 ) {
+            toExpand = false;
+        }
+    });
+    if (!toExpand) {
+        return;
+    }
+    $(element).parents(".branch-logic").each(function(index, node) {
+        var level = $(node).data("level");
+        $(node).siblings(".branch-logic").each(function(index, node) {
+            if ($(node).data("level") > level) {
+                toExpand = false;
+            }
+        });
+        if(toExpand) {
+            $(node).data("level", level + 1);
+            $(node).children(".branch-vertical").each(function(index, node) {
+                height = $(node).height();
+                $(node).height(height + expand);
+            })
+        } else {
+            return;
+        }
     });
 }
 
