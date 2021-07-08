@@ -8,13 +8,13 @@ const m = ["M0", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"];
 
 const rungTemplate =
   '<div class="rung rung-template" draggable="true">' +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   '<div class="wire">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-right">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   "</div>";
@@ -73,36 +73,36 @@ const oteTemplate =
 
 const branchTemplate =
   '<div class="branch-logic branch-template" draggable="true">' +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   '<div class="branch-vertical" style="height: 58px;"></div>' +
   '<div class="branch-rungs">' +
   '<div class="rung">' +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   '<div class="wire">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-right">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   "</div>" +
   '<div class="rung">' +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   '<div class="wire">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-right">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   "</div>" +
   "</div>" +
   '<div class="branch-vertical" style="height: 58px;"></div>' +
-  '<div class="short-wire">' +
+  '<div class="short-wire wire-right">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
   "</div>";
@@ -201,7 +201,27 @@ $(document).on(
   "drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     var cloned = dragged.cloneNode(true);
-    $(this).before(cloned);
+
+    if ($(cloned).hasClass("branch-template")) {
+        $(this).parent().parent().parent().find('.branch-rungs').append('<div class="rung">' +
+        '<div class="short-wire wire-left">' +
+        '<div class="wire-visible"></div>' +
+        "</div>" +
+        '<div class="wire">' +
+        '<div class="wire-visible"></div>' +
+        "</div>" +
+        '<div class="short-wire wire-right">' +
+        '<div class="wire-visible"></div>' +
+        "</div>" +
+        "</div>" +
+        "</div>");  
+        const height = $(this).parent().parent().parent().find('.branch-vertical').height();
+
+        $(this).parent().parent().parent().find('.branch-vertical').height(height + 58);
+      } else {
+        $(this).before(cloned);
+      }
+
     dragged = null;
     $(this).css("outline", "");
   }
@@ -224,9 +244,9 @@ $(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("ote-template")) {
     $(this).after(cloned);
-  } else {
+  } else if ($(cloned).hasClass("xic-template") || $(cloned).hasClass("xio-template")) {
     $(this).before(cloned);
-  }
+  } 
   dragged = null;
   $(this).css("outline", "");
 });
@@ -294,16 +314,28 @@ function renderAnd(json) {
         if (typeof(json[i]) === 'string') {
             s += xicTemplate;
         } else {
-            
+            for (var j in json[i]) {
+                if (j === 'not') {
+                    s += xioTemplate;
+                } else if (j === 'or') {
+                    s1 = renderOr(json[i][j]);
+                    s += s1;
+                }
+            }
         }
     }
-
     return s;
 }
 
 function renderOr(json) {
-    console.log(json);
-
+    var s = $("<div></div>");
+    s.append(branchTemplate);
+    for (var i in json) {
+        if (typeof(json[i]) === 'string') {
+            
+        }
+    }
+    return s.html();
 }
 
 function renderNot(json) {
