@@ -154,10 +154,11 @@ $(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs 
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("xic-template")) {
     $(cloned).removeClass("xic-template");
+    $(this).parent().parent().parent().before(cloned);
   } else if ($(cloned).hasClass("xio-template")) {
     $(cloned).removeClass("xio-template");
+    $(this).parent().parent().parent().before(cloned);
   }
-  $(this).parent().parent().parent().before(cloned);
   dragged = null;
   $(this).css("outline", "");
 });
@@ -166,39 +167,94 @@ $(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs 
   var cloned = dragged.cloneNode(true);
   if ($(cloned).hasClass("xic-template")) {
     $(cloned).removeClass("xic-template");
+    $(this).parent().parent().parent().after(cloned);
   } else if ($(cloned).hasClass("xio-template")) {
     $(cloned).removeClass("xio-template");
+    $(this).parent().parent().parent().after(cloned);
   }
-  $(this).parent().parent().parent().after(cloned);
   dragged = null;
   $(this).css("outline", "");
+});
+
+// Add parallel rung onto a contact
+
+$(document).on("dragenter", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
+function(event) {
+    if ($(dragged).hasClass('branch-template')) {
+        $(this).css("outline", "2px dashed blue");
+    }
+});
+
+$(document).on("dragleave", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
+function(event) {
+    if ($(dragged).hasClass('branch-template')) {
+        $(this).css("outline", "");
+    }
+});
+
+$(document).on("dragover", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
+function(event) {
+    if ($(dragged).hasClass('branch-template')) {
+        event.preventDefault();
+    }
+});
+
+$(document).on("drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio", 
+function(event) {
+    if ($(dragged).hasClass('branch-template')) {
+        var cloned = dragged.cloneNode(true);
+        dragged = null;
+        $(this).css("outline", "");
+        var s = $(this).parent().parent().parent().parent();
+        var branch = branchTemplate;
+        var contact = $(s).html();
+        $(this).parent().parent().parent().replaceWith(branch);
+        $(s).find(".wire-left:eq(1)").after(contact);
+
+        // $(this).parent().parent().parent().find('.branch-rungs').append('<div class="rung">' +
+        // '<div class="short-wire wire-left">' +
+        // '<div class="wire-visible"></div>' +
+        // "</div>" +
+        // '<div class="wire">' +
+        // '<div class="wire-visible"></div>' +
+        // "</div>" +
+        // '<div class="short-wire wire-right">' +
+        // '<div class="wire-visible"></div>' +
+        // "</div>" +
+        // "</div>" +
+        // "</div>");  
+        // const height = $(this).parent().parent().parent().find('.branch-vertical').height();
+        // $(this).parent().parent().parent().find('.branch-vertical').height(height + 58);
+        escalateBranchVertical($(s), 58);
+    }
+
 });
 
 // Move objects to the branch
 
 $(document).on(
-  "dragenter", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
+  "dragenter", ".logic .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     $(this).css("outline", "2px dashed blue");
   }
 );
 
 $(document).on(
-  "dragleave", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
+  "dragleave", ".logic .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     $(this).css("outline", "");
   }
 );
 
 $(document).on(
-  "dragover", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
+  "dragover", ".logic .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     event.preventDefault();
   }
 );
 
 $(document).on(
-  "drop", ".logic > .rungs > .rung > .branch-logic > .branch-rungs > .rung > .wire",
+  "drop", ".logic .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
     var cloned = dragged.cloneNode(true);
 
@@ -217,7 +273,7 @@ $(document).on(
         "</div>");  
         const height = $(this).parent().parent().parent().find('.branch-vertical').height();
 
-        $(this).parent().parent().parent().find('.branch-vertical').height(height + 58);
+        $(this).parent().parent().parent().find('.branch-vertical').height(height + 60);
       } else {
         $(this).before(cloned);
       }
@@ -246,7 +302,9 @@ $(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
     $(this).after(cloned);
   } else if ($(cloned).hasClass("xic-template") || $(cloned).hasClass("xio-template")) {
     $(this).before(cloned);
-  } 
+  } else if ($(cloned).hasClass("branch-template")) {
+    $(this).before(cloned);
+  }
   dragged = null;
   $(this).css("outline", "");
 });
@@ -341,6 +399,13 @@ function renderOr(json) {
 function renderNot(json) {
     console.log(json);
 
+}
+
+// escalate the change of height of the branch vertical links
+
+function escalateBranchVertical(element, expand) {
+    var height = $(element).parent().siblings(".branch-vertical").height();
+    $(element).parent().siblings(".branch-vertical").height(height + expand);
 }
 
 function renderAssign(json) {
