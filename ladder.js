@@ -48,12 +48,14 @@ const xioTemplate =
   '<div class="wire-visible"></div>' +
   "</div>" +
   "</div>" +
+  "</div>" +
   "</div>";
 
 const oteTemplate =
   '<div class="ladder-element ote-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
   '<input type="text" value="Variable" class="tag-name"></input>' +
+  '<div class="circuit-element">' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
   "</div>" +
@@ -424,9 +426,12 @@ function renderAnd(json) {
 
 function renderOr(json) {
   var s = $("<div></div>");
-  s.append(branchTemplate);
+  var level = json.length;
+  var branches = buildMultiBranch(level);
+  s.append(branches);
   for (var i in json) {
     if (typeof json[i] === "string") {
+        s.find(".rung:eq(" + i + ") > .wire").before(xicTemplate)
     }
   }
   return s.html();
@@ -476,6 +481,34 @@ function renderAssign(json) {
   // console.log(s);
 
   return s.innerHTML;
+}
+
+function buildMultiBranch(level) {
+    var s = $("<div></div>");
+    if (level <= 2) {
+        s.append(branchTemplate);
+    } else {
+        s.append(branchTemplate);
+        s.find(".branch-logic").each(function(index, node) {
+            // $(node).data("level", level);
+            $(node).attr("data-level", level);
+        });
+        s.find(".branch-vertical").height(58 * (level-1));
+        for(var i = 2; i < level; i++) {
+            s.find(".branch-rungs").append('<div class="rung">' +
+            '<div class="short-wire wire-left">' +
+            '<div class="wire-visible"></div>' +
+            "</div>" +
+            '<div class="wire">' +
+            '<div class="wire-visible"></div>' +
+            "</div>" +
+            '<div class="short-wire wire-right">' +
+            '<div class="wire-visible"></div>' +
+            "</div>" +
+            "</div>");
+        }
+    }
+    return s.html();
 }
 
 function saveToJson() {}
