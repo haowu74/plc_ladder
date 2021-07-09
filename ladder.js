@@ -281,7 +281,8 @@ $(document).on(
           .parent()
           .parent()
           .parent()
-          .children(".branch-rungs").first()
+          .children(".branch-rungs")
+          .first()
           .append(
             '<div class="rung">' +
               '<div class="short-wire wire-left">' +
@@ -386,10 +387,11 @@ function renderRung(json) {
     switch (key) {
       case "and":
         var temp = renderAnd(json[key]);
-        $(rung).prepend(temp);
+        $(rung).prepend(temp[0]);
         break;
       case "or":
-        renderOr(json[key]);
+        var temp = renderOr(json[key]);
+        $(rung).prepend(temp[0]);
         break;
       case "not":
         renderNot(json[key]);
@@ -406,35 +408,61 @@ function renderRung(json) {
 }
 
 function renderAnd(json) {
-  var s = "";
+  var s = $("<div></div>");
+  var h = 1;
   for (var i in json) {
     if (typeof json[i] === "string") {
-      s += xicTemplate;
+      s.append(xicTemplate);
     } else {
       for (var j in json[i]) {
         if (j === "not") {
-          s += xioTemplate;
+          s.append(xioTemplate);
         } else if (j === "or") {
           s1 = renderOr(json[i][j]);
-          s += s1;
+          s.append(s1[0]);
+          if (s1[1] > h) {
+              h = s1[1];
+          }
         }
       }
     }
   }
-  return s;
+  return [s.html(), h];
 }
 
 function renderOr(json) {
   var s = $("<div></div>");
   var level = json.length;
+  var h = level;
   var branches = buildMultiBranch(level);
   s.append(branches);
+  var rungs = [];
+  for (var i in json) {
+    rungs.push(s.find(".rung:eq(" + i + ") > .wire"));
+  }
   for (var i in json) {
     if (typeof json[i] === "string") {
-        s.find(".rung:eq(" + i + ") > .wire").before(xicTemplate)
+      rungs[i].before(xicTemplate);
+    } else {
+        var h1 = 1;
+      for (var j in json[i]) {
+        if (j === "not") {
+          rungs[i].before(xioTemplate);
+        } else if (j === "and") {
+          s1 = renderAnd(json[i][j]);
+          rungs[i].before(s1[0]);
+          if (s1[1] > h1) {
+              h1 = s1[1];
+          } 
+        }
+      }
+      h += (h1 -1)
     }
   }
-  return s.html();
+  s.children(".branch-logic:eq(0)").children(".branch-vertical").each(function(index, node) {
+    $(node).height(58 * (h-1));
+  });
+  return [s.html(), h];
 }
 
 function renderNot(json) {
@@ -444,31 +472,39 @@ function renderNot(json) {
 // escalate the change of height of the branch vertical links
 
 function escalateBranchVertical(element, expand) {
-    var toExpand = true;
-    $(element).siblings(".branch-logic").each(function(index, node) {
-        if ($(node).data("level") >=2 ) {
-            toExpand = false;
-        }
+  var toExpand = true;
+  $(element)
+    .siblings(".branch-logic")
+    .each(function (index, node) {
+      if ($(node).data("level") >= 2) {
+        toExpand = false;
+      }
     });
-    if (!toExpand) {
-        return;
-    }
-    $(element).parents(".branch-logic").each(function(index, node) {
-        var level = $(node).data("level");
-        $(node).siblings(".branch-logic").each(function(index, node) {
-            if ($(node).data("level") > level) {
-                toExpand = false;
-            }
+  if (!toExpand) {
+    return;
+  }
+  $(element)
+    .parents(".branch-logic")
+    .each(function (index, node) {
+      var level = $(node).data("level");
+      $(node)
+        .siblings(".branch-logic")
+        .each(function (index, node) {
+          if ($(node).data("level") > level) {
+            toExpand = false;
+          }
         });
-        if(toExpand) {
-            $(node).data("level", level + 1);
-            $(node).children(".branch-vertical").each(function(index, node) {
-                height = $(node).height();
-                $(node).height(height + expand);
-            })
-        } else {
-            return;
-        }
+      if (toExpand) {
+        $(node).data("level", level + 1);
+        $(node)
+          .children(".branch-vertical")
+          .each(function (index, node) {
+            height = $(node).height();
+            $(node).height(height + expand);
+          });
+      } else {
+        return;
+      }
     });
 }
 
@@ -484,31 +520,37 @@ function renderAssign(json) {
 }
 
 function buildMultiBranch(level) {
-    var s = $("<div></div>");
-    if (level <= 2) {
-        s.append(branchTemplate);
-    } else {
-        s.append(branchTemplate);
-        s.find(".branch-logic").each(function(index, node) {
-            // $(node).data("level", level);
-            $(node).attr("data-level", level);
-        });
-        s.find(".branch-vertical").height(58 * (level-1));
-        for(var i = 2; i < level; i++) {
-            s.find(".branch-rungs").append('<div class="rung">' +
-            '<div class="short-wire wire-left">' +
-            '<div class="wire-visible"></div>' +
-            "</div>" +
-            '<div class="wire">' +
-            '<div class="wire-visible"></div>' +
-            "</div>" +
-            '<div class="short-wire wire-right">' +
-            '<div class="wire-visible"></div>' +
-            "</div>" +
-            "</div>");
-        }
+  var s = $("<div></div>");
+  if (level <= 2) {
+    s.append(branchTemplate);
+  } else {
+    s.append(branchTemplate);
+    s.find(".branch-logic").each(function (index, node) {
+      // $(node).data("level", level);
+      $(node).attr("data-level", level);
+    });
+    s.find(".branch-vertical").height(58 * (level - 1));
+    for (var i = 2; i < level; i++) {
+      s.find(".branch-rungs").append(
+        '<div class="rung">' +
+          '<div class="short-wire wire-left">' +
+          '<div class="wire-visible"></div>' +
+          "</div>" +
+          '<div class="wire">' +
+          '<div class="wire-visible"></div>' +
+          "</div>" +
+          '<div class="short-wire wire-right">' +
+          '<div class="wire-visible"></div>' +
+          "</div>" +
+          "</div>"
+      );
     }
-    return s.html();
+  }
+  return s.html();
+}
+
+function setBranchHeight(branch, h) {
+
 }
 
 function saveToJson() {}
