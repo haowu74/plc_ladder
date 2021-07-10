@@ -412,11 +412,15 @@ function renderAnd(json) {
   var h = 1;
   for (var i in json) {
     if (typeof json[i] === "string") {
-      s.append(xicTemplate);
+        temp = $(xicTemplate);
+        temp.find('input:text').attr('value', json[i]);
+      s.append(temp);
     } else {
       for (var j in json[i]) {
         if (j === "not") {
-          s.append(xioTemplate);
+            temp = $(xioTemplate);
+        temp.find('input:text').attr('value', json[i][j]);
+          s.append(temp);
         } else if (j === "or") {
           s1 = renderOr(json[i][j]);
           s.append(s1[0]);
@@ -442,12 +446,16 @@ function renderOr(json) {
   }
   for (var i in json) {
     if (typeof json[i] === "string") {
-      rungs[i].before(xicTemplate);
+        temp = $(xicTemplate);
+        temp.find('input:text').attr('value', json[i]);
+      rungs[i].before(temp);
     } else {
         var h1 = 1;
       for (var j in json[i]) {
         if (j === "not") {
-          rungs[i].before(xioTemplate);
+            temp = $(xioTemplate);
+        temp.find('input:text').attr('value', json[i][j]);
+          rungs[i].before(temp);
         } else if (j === "and") {
           s1 = renderAnd(json[i][j]);
           rungs[i].before(s1[0]);
@@ -512,7 +520,9 @@ function renderAssign(json) {
   console.log(json);
   var s = document.createElement("div");
   if (typeof json === "string") {
-    $(s).append(oteTemplate);
+    temp = $(oteTemplate);
+    temp.find('input:text').attr('value', json);
+    $(s).append(temp);
   }
   // console.log(s);
 
