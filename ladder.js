@@ -2,10 +2,6 @@ var jsonObject;
 
 var dragged;
 
-const x = ["X0", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "X8", "X9"];
-const y = ["Y0", "Y1", "Y2", "Y3", "Y4", "Y5"];
-const m = ["M0", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"];
-
 const rungTemplate =
   '<div class="rung rung-template" draggable="true">' +
   '<div class="short-wire wire-left">' +
@@ -136,7 +132,7 @@ $(".trash").on("drop", function (event) {
 
 $(document).on(
   "dragenter",
-  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire",
+  ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire",
   function (event) {
     $(this).css("outline", "2px dashed blue");
   }
@@ -144,7 +140,7 @@ $(document).on(
 
 $(document).on(
   "dragleave",
-  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire",
+  ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire",
   function (event) {
     $(this).css("outline", "");
   }
@@ -152,7 +148,7 @@ $(document).on(
 
 $(document).on(
   "dragover",
-  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire",
+  ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire",
   function (event) {
     event.preventDefault();
   }
@@ -160,7 +156,7 @@ $(document).on(
 
 $(document).on(
   "drop",
-  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire-left",
+  ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire-left",
   function (event) {
     var cloned = dragged.cloneNode(true);
     if ($(cloned).hasClass("xic-template")) {
@@ -177,7 +173,7 @@ $(document).on(
 
 $(document).on(
   "drop",
-  ".logic .ladder-element > .ladder-element-bool > .circuit-element > .wire-right",
+  ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire-right",
   function (event) {
     var cloned = dragged.cloneNode(true);
     if ($(cloned).hasClass("xic-template")) {
@@ -348,6 +344,46 @@ $(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
   dragged = null;
   $(this).css("outline", "");
 });
+
+// Move branch to the coil
+$(document).on(
+  "dragenter",
+  ".logic > .rungs > .rung > .ote-template > .ladder-element-bool > .circuit-element > .wire-right",
+  function (event) {
+    if ($(dragged).hasClass("branch-template")) {
+      $(this).css("outline", "2px dashed blue");
+    }
+  }
+);
+
+$(document).on(
+  "dragleave",
+  ".logic > .rungs > .rung > .ote-template > .ladder-element-bool > .circuit-element > .wire-right",
+  function (event) {
+    $(this).css("outline", "");
+  }
+);
+
+$(document).on(
+  "dragover",
+  ".logic > .rungs > .rung > .ote-template > .ladder-element-bool > .circuit-element > .wire-right",
+  function (event) {
+    event.preventDefault();
+  }
+);
+
+$(document).on(
+  "drop",
+  ".logic > .rungs > .rung > .ote-template > .ladder-element-bool > .circuit-element > .wire-right",
+  function (event) {
+    var cloned = dragged.cloneNode(true);
+    if ($(cloned).hasClass("branch-template")) {
+      $(this).parent().parent().parent().after(cloned);
+    } 
+    dragged = null;
+    $(this).css("outline", "");
+  }
+);
 
 // Document ready
 $.ready(function () {});
