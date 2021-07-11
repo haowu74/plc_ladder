@@ -364,7 +364,7 @@ async function readFromJson() {
   fileReader.onload = function (fileLoadedEvent) {
     var textFromFileLoaded = fileLoadedEvent.target.result;
     jsonObject = JSON.parse(textFromFileLoaded);
-    console.log(jsonObject);
+    // console.log(jsonObject);
 
     renderJson(jsonObject);
   };
@@ -649,10 +649,12 @@ function verticalToJson(branches) {
       } else if ($($(node).children('.ladder-element, .branch-logic')[0]).hasClass("xio-template")) {
         var name = $($(node).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
         json['or'].push({'not': name});
-      }
+      } 
     } else if ($(node).children('.ladder-element, .branch-logic').length > 1) {
       json['or'].push(horizontalToJson(node));
-    } 
+    } else {
+      json['or'].push('true');
+    }
   });
   return json;
 }
