@@ -534,7 +534,7 @@ input{
     width: 68px;
     text-align: center;
     border: 0px;
-    pointer-events:none
+    /* pointer-events:none */
 }
 
 .ladder-element-number-inner{

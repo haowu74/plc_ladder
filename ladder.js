@@ -22,7 +22,7 @@ const rungTemplate =
 const xicTemplate =
   '<div class="ladder-element xic-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
-  '<input type="text" value="Variable" class="tag-name"></input>' +
+  '<input type="text" value="Variable" class="tag-name" onchange="changeTagName(event)"></input>' +
   '<div class="circuit-element">' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
@@ -38,7 +38,7 @@ const xicTemplate =
 const xioTemplate =
   '<div class="ladder-element xio-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
-  '<input type="text" value="Variable" class="tag-name"></input>' +
+  '<input type="text" value="Variable" class="tag-name" onchange="changeTagName(event)"></input>' +
   '<div class="circuit-element">' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
@@ -54,7 +54,7 @@ const xioTemplate =
 const oteTemplate =
   '<div class="ladder-element ote-template" draggable="true">' +
   '<div class="ladder-element-bool">' +
-  '<input type="text" value="Variable" class="tag-name"></input>' +
+  '<input type="text" value="Variable" class="tag-name" onchange="changeTagName(event)"></input>' +
   '<div class="circuit-element">' +
   '<div class="wire wire-left">' +
   '<div class="wire-visible"></div>' +
@@ -672,4 +672,8 @@ function horizontalToJson(rung) {
     } 
   });
   return json;
+}
+
+function changeTagName(e) {
+  $(e.target).attr('value', e.target.value);
 }
