@@ -171,7 +171,10 @@ input{
 .toolbox{
     -ms-flex-direction:column;
     flex-direction:column;
-    padding:0;margin:10px
+    padding:0;margin:10px;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
 }
 
 .toolbox,.toolbox .nav{
@@ -626,8 +629,8 @@ input{
     display:inline-block;
     content:"";
     border-radius:50%;
-    width:14px;
-    height:14px;
+    width:12px;
+    height:12px;
     border:2px solid #5c5c5c;
     text-align:center;
     vertical-align:middle;
@@ -652,4 +655,11 @@ input{
     color:#00d900;
     border-color:#00d900
 }
-/*# sourceMappingURL=main.9eda174c.css.map*/
+
+.sticky {
+    position: -webkit-sticky; /* for Safari */
+    position: sticky;
+    top: 0;
+    align-self: flex-start; /* <-- this is the fix */
+    background-color: red;  /* Not necessary -- for example only */
+  }

@@ -303,6 +303,10 @@ $(document).on(
       $(this).before(cloned);
     }
 
+    if ($(dragged).find('input').length > 0 && $($(dragged).find('input')[0]).attr('value') !== 'Variable') {
+      $(dragged).remove();
+    }
+
     dragged = null;
     $(this).css("outline", "");
   }
@@ -340,6 +344,9 @@ $(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
     $(this).before(cloned);
   } else if ($(cloned).hasClass("branch-template")) {
     $(this).before(cloned);
+  }
+  if ($(dragged).find('input').length > 0 && $($(dragged).find('input')[0]).attr('value') !== 'Variable') {
+    $(dragged).remove();
   }
   dragged = null;
   $(this).css("outline", "");
