@@ -379,7 +379,7 @@ $(document).on(
     var cloned = dragged.cloneNode(true);
     if ($(cloned).hasClass("branch-template")) {
       $(this).parent().parent().parent().after(cloned);
-    } 
+    }
     dragged = null;
     $(this).css("outline", "");
   }
@@ -556,14 +556,47 @@ function escalateBranchVertical(element, expand) {
 }
 
 function renderAssign(json) {
-  console.log(json);
-  var s = document.createElement("div");
-  if (typeof json === "string") {
+  var s = $("<div></div>");
+  var level = json.length;
+  var h = 0;
+
+  if (json.length == 1) {
     temp = $(oteTemplate);
-    temp.find("input:text").attr("value", json);
+    temp.find("input:text").attr("value", json[0]);
     $(s).append(temp);
+    return s.html();
+  } else {
+    var branches = buildMultiBranch(level);
+    s.append(branches);
+    var rungs = [];
+    for (var i in json) {
+      rungs.push(s.find(".rung:eq(" + i + ") > .wire"));
+    }
+    for (var i in json) {
+      var h1 = 1;
+  
+      if (typeof json[i] === "string") {
+        temp = $(oteTemplate);
+        temp.find("input:text").attr("value", json[i]);
+        rungs[i].before(temp);
+      } else {
+        for (var j in json[i]) {
+          if (j === "not") {
+            // temp = $(xioTemplate);
+            // temp.find("input:text").attr("value", json[i][j]);
+            // rungs[i].before(temp);
+          } 
+        }
+      }
+      h += h1;
+    }
+    s.children(".branch-logic:eq(0)")
+      .children(".branch-vertical")
+      .each(function (index, node) {
+        $(node).height(58 * (h - 1));
+      });
+    return s.html();
   }
-  return s.innerHTML;
 }
 
 function buildMultiBranch(level) {
@@ -624,114 +657,195 @@ function saveToJson() {
 }
 
 function rungToJson(index, rung) {
-  var json = {}
-  json['id'] = index;
-  var num = $(rung).children('.ladder-element, .branch-logic').length;
+  var json = {};
+  json["id"] = index;
+  var num = $(rung).children(".ladder-element, .branch-logic").length;
   if (num >= 3) {
     // "and" be the first level
-    json['and'] = [];
-    $(rung).children('.ladder-element, .branch-logic').each(function(index, node) {
-      if ($($(rung).children('.ladder-element, .branch-logic')[index]).hasClass("xic-template")) {
-        var name = $($(rung).children('.ladder-element, .branch-logic')[index]).find("input").attr("value");
-        json['and'].push(name);
-      } else if ($($(rung).children('.ladder-element, .branch-logic')[index]).hasClass("xio-template")) {
-        var name = $($(rung).children('.ladder-element, .branch-logic')[index]).find("input").attr("value");
-        json['and'].push({"not": name});
-      } else if (index != num - 1 && $($(rung).children('.ladder-element, .branch-logic')[index]).hasClass("branch-logic")) {
-        var branches = $($(rung).children('.ladder-element, .branch-logic')[index]).children('.branch-rungs')[0];
-        var branchesJson = verticalToJson(branches);
-        json['and'].push(branchesJson);
-      }
-    });
+    json["and"] = [];
+    $(rung)
+      .children(".ladder-element, .branch-logic")
+      .each(function (index, node) {
+        if (
+          $($(rung).children(".ladder-element, .branch-logic")[index]).hasClass(
+            "xic-template"
+          )
+        ) {
+          var name = $(
+            $(rung).children(".ladder-element, .branch-logic")[index]
+          )
+            .find("input")
+            .attr("value");
+          json["and"].push(name);
+        } else if (
+          $($(rung).children(".ladder-element, .branch-logic")[index]).hasClass(
+            "xio-template"
+          )
+        ) {
+          var name = $(
+            $(rung).children(".ladder-element, .branch-logic")[index]
+          )
+            .find("input")
+            .attr("value");
+          json["and"].push({ not: name });
+        } else if (
+          index != num - 1 &&
+          $($(rung).children(".ladder-element, .branch-logic")[index]).hasClass(
+            "branch-logic"
+          )
+        ) {
+          var branches = $(
+            $(rung).children(".ladder-element, .branch-logic")[index]
+          ).children(".branch-rungs")[0];
+          var branchesJson = verticalToJson(branches);
+          json["and"].push(branchesJson);
+        }
+      });
 
     // json["="] = $($(rung).children('.ladder-element, .branch-logic')[num-1]).find("input").attr("value");
   } else if (num == 2) {
-    if ($($(rung).children('.ladder-element, .branch-logic')[0]).hasClass("ladder-element")) {
+    if (
+      $($(rung).children(".ladder-element, .branch-logic")[0]).hasClass(
+        "ladder-element"
+      )
+    ) {
       // "and" be the first level
-      json['and'] = [];
-      if ($($(rung).children('.ladder-element, .branch-logic')[0]).hasClass("xic-template")) {
-        var name = $($(rung).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
-        json['and'].push(name);
-      } else if ($($(rung).children('.ladder-element, .branch-logic')[0]).hasClass("xio-template")) {
-        var name = $($(rung).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
-        json['and'].push({"not": name});
+      json["and"] = [];
+      if (
+        $($(rung).children(".ladder-element, .branch-logic")[0]).hasClass(
+          "xic-template"
+        )
+      ) {
+        var name = $($(rung).children(".ladder-element, .branch-logic")[0])
+          .find("input")
+          .attr("value");
+        json["and"].push(name);
+      } else if (
+        $($(rung).children(".ladder-element, .branch-logic")[0]).hasClass(
+          "xio-template"
+        )
+      ) {
+        var name = $($(rung).children(".ladder-element, .branch-logic")[0])
+          .find("input")
+          .attr("value");
+        json["and"].push({ not: name });
       }
-    } else if ($($(rung).children('.ladder-element, .branch-logic')[0]).hasClass("branch-logic")) {
+    } else if (
+      $($(rung).children(".ladder-element, .branch-logic")[0]).hasClass(
+        "branch-logic"
+      )
+    ) {
       // "or" be the first level
-      var branches = $($(rung).children('.ladder-element, .branch-logic')[0]).children('.branch-rungs')[0];
+      var branches = $(
+        $(rung).children(".ladder-element, .branch-logic")[0]
+      ).children(".branch-rungs")[0];
       var branchesJson = verticalToJson(branches);
       $.extend(json, branchesJson);
     }
-
   } else if (num == 1) {
-
+    // Should just load a constant True
+    json["and"] = ["true"];
   } else {
-
+    // Should be deleted
   }
 
-  if ($($(rung).children('.ladder-element, .branch-logic')[num-1]).hasClass('branch-logic')) {
-    var branches = $($(rung).children('.ladder-element, .branch-logic')[num-1]).children('.branch-rungs')[0];
+  if (
+    $($(rung).children(".ladder-element, .branch-logic")[num - 1]).hasClass(
+      "branch-logic"
+    )
+  ) {
+    var branches = $(
+      $(rung).children(".ladder-element, .branch-logic")[num - 1]
+    ).children(".branch-rungs")[0];
     var branchesJson = parallelCoilToJson(branches);
     $.extend(json, branchesJson);
   } else {
-    json["="] = $($(rung).children('.ladder-element, .branch-logic')[num-1]).find("input").attr("value");
+    json["="] = $($(rung).children(".ladder-element, .branch-logic")[num - 1])
+      .find("input")
+      .attr("value");
   }
 
   return json;
 }
 
 function verticalToJson(branches) {
-  var json = {}
-  json['or'] = [];
-  $(branches).children('.rung').each(function(index, node) {
-    if ($(node).children('.ladder-element, .branch-logic').length == 1) {
-      if ($($(node).children('.ladder-element, .branch-logic')[0]).hasClass("xic-template")) {
-        var name = $($(node).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
-        json['or'].push(name);
-      } else if ($($(node).children('.ladder-element, .branch-logic')[0]).hasClass("xio-template")) {
-        var name = $($(node).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
-        json['or'].push({'not': name});
-      } 
-    } else if ($(node).children('.ladder-element, .branch-logic').length > 1) {
-      json['or'].push(horizontalToJson(node));
-    } else {
-      json['or'].push('true');
-    }
-  });
+  var json = {};
+  json["or"] = [];
+  $(branches)
+    .children(".rung")
+    .each(function (index, node) {
+      if ($(node).children(".ladder-element, .branch-logic").length == 1) {
+        if (
+          $($(node).children(".ladder-element, .branch-logic")[0]).hasClass(
+            "xic-template"
+          )
+        ) {
+          var name = $($(node).children(".ladder-element, .branch-logic")[0])
+            .find("input")
+            .attr("value");
+          json["or"].push(name);
+        } else if (
+          $($(node).children(".ladder-element, .branch-logic")[0]).hasClass(
+            "xio-template"
+          )
+        ) {
+          var name = $($(node).children(".ladder-element, .branch-logic")[0])
+            .find("input")
+            .attr("value");
+          json["or"].push({ not: name });
+        }
+      } else if (
+        $(node).children(".ladder-element, .branch-logic").length > 1
+      ) {
+        json["or"].push(horizontalToJson(node));
+      } else {
+        json["or"].push("true");
+      }
+    });
   return json;
 }
 
 function horizontalToJson(rung) {
   var json = {};
-  json['and'] = [];
-  $(rung).children('.ladder-element, .branch-logic').each(function(index, node) {
-    if ($(node).hasClass("xic-template")) {
-      var name = $(node).find("input").attr("value");
-      json['and'].push(name);
-    } else if ($(node).hasClass("xio-template")) {
-      var name = $(node).find("input").attr("value");
-      json['and'].push({'not': name});
-    } else if ($(node).hasClass('branch-logic')) {
-      json['and'].push(verticalToJson($(node).children('.branch-rungs')[0]));
-    } 
-  });
+  json["and"] = [];
+  $(rung)
+    .children(".ladder-element, .branch-logic")
+    .each(function (index, node) {
+      if ($(node).hasClass("xic-template")) {
+        var name = $(node).find("input").attr("value");
+        json["and"].push(name);
+      } else if ($(node).hasClass("xio-template")) {
+        var name = $(node).find("input").attr("value");
+        json["and"].push({ not: name });
+      } else if ($(node).hasClass("branch-logic")) {
+        json["and"].push(verticalToJson($(node).children(".branch-rungs")[0]));
+      }
+    });
   return json;
 }
 
 function parallelCoilToJson(branches) {
-  var json = {}
-  json['='] = [];
-  $(branches).children('.rung').each(function(index, node) {
-    if ($(node).children('.ladder-element, .branch-logic').length == 1) {
-      if ($($(node).children('.ladder-element, .branch-logic')[0]).hasClass("ote-template")) {
-        var name = $($(node).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
-        json['='].push(name);
-      } 
-    }
-  });
-  return json;  
+  var json = {};
+  json["="] = [];
+  $(branches)
+    .children(".rung")
+    .each(function (index, node) {
+      if ($(node).children(".ladder-element, .branch-logic").length == 1) {
+        if (
+          $($(node).children(".ladder-element, .branch-logic")[0]).hasClass(
+            "ote-template"
+          )
+        ) {
+          var name = $($(node).children(".ladder-element, .branch-logic")[0])
+            .find("input")
+            .attr("value");
+          json["="].push(name);
+        }
+      }
+    });
+  return json;
 }
 
 function changeTagName(e) {
-  $(e.target).attr('value', e.target.value);
+  $(e.target).attr("value", e.target.value);
 }
