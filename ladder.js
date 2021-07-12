@@ -637,14 +637,14 @@ function rungToJson(index, rung) {
       } else if ($($(rung).children('.ladder-element, .branch-logic')[index]).hasClass("xio-template")) {
         var name = $($(rung).children('.ladder-element, .branch-logic')[index]).find("input").attr("value");
         json['and'].push({"not": name});
-      } else if ($($(rung).children('.ladder-element, .branch-logic')[index]).hasClass("branch-logic")) {
+      } else if (index != num - 1 && $($(rung).children('.ladder-element, .branch-logic')[index]).hasClass("branch-logic")) {
         var branches = $($(rung).children('.ladder-element, .branch-logic')[index]).children('.branch-rungs')[0];
         var branchesJson = verticalToJson(branches);
         json['and'].push(branchesJson);
       }
     });
 
-    json["="] = $($(rung).children('.ladder-element, .branch-logic')[num-1]).find("input").attr("value");
+    // json["="] = $($(rung).children('.ladder-element, .branch-logic')[num-1]).find("input").attr("value");
   } else if (num == 2) {
     if ($($(rung).children('.ladder-element, .branch-logic')[0]).hasClass("ladder-element")) {
       // "and" be the first level
@@ -663,12 +663,18 @@ function rungToJson(index, rung) {
       $.extend(json, branchesJson);
     }
 
-    json["="] = $($(rung).children('.ladder-element, .branch-logic')[num-1]).find("input").attr("value");
-
   } else if (num == 1) {
 
   } else {
 
+  }
+
+  if ($($(rung).children('.ladder-element, .branch-logic')[num-1]).hasClass('branch-logic')) {
+    var branches = $($(rung).children('.ladder-element, .branch-logic')[num-1]).children('.branch-rungs')[0];
+    var branchesJson = parallelCoilToJson(branches);
+    $.extend(json, branchesJson);
+  } else {
+    json["="] = $($(rung).children('.ladder-element, .branch-logic')[num-1]).find("input").attr("value");
   }
 
   return json;
@@ -710,6 +716,20 @@ function horizontalToJson(rung) {
     } 
   });
   return json;
+}
+
+function parallelCoilToJson(branches) {
+  var json = {}
+  json['='] = [];
+  $(branches).children('.rung').each(function(index, node) {
+    if ($(node).children('.ladder-element, .branch-logic').length == 1) {
+      if ($($(node).children('.ladder-element, .branch-logic')[0]).hasClass("ote-template")) {
+        var name = $($(node).children('.ladder-element, .branch-logic')[0]).find("input").attr("value");
+        json['='].push(name);
+      } 
+    }
+  });
+  return json;  
 }
 
 function changeTagName(e) {
