@@ -741,6 +741,9 @@ function rungToJson(index, rung) {
   var json = {};
   json["id"] = index;
   var num = $(rung).children(".ladder-element, .branch-logic").length;
+  if ($(rung).find('.ote-template').length == 0) {
+    num += 1;
+  }
   if (num >= 3) {
     // "and" be the first level
     json["and"] = [];
@@ -841,9 +844,11 @@ function rungToJson(index, rung) {
     var branchesJson = parallelCoilToJson(branches);
     $.extend(json, branchesJson);
   } else {
-    json["="] = $($(rung).children(".ladder-element, .branch-logic")[num - 1])
+    if ($(rung).find('.ote-template').length > 1) {
+      json["="] = $($(rung).children(".ladder-element, .branch-logic")[num - 1])
       .find("input")
       .attr("value");
+    } 
   }
 
   return json;

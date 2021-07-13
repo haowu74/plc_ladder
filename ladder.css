@@ -664,6 +664,6 @@ input{
     background-color: red;  /* Not necessary -- for example only */
   }
 
-.wire-visible {
+.wire-visible, .trash > p {
     pointer-events: none;
 }  
