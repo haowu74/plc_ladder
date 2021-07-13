@@ -107,6 +107,17 @@ $(document).on("dragstart", "div[draggable=true]", function (event) {
   dragged = event.target;
 });
 
+// For touch screen
+$(document).on("touchstart", ".toolbox div[draggable=true]", function (event) {
+  if (!dragged) {
+    dragged = $(event.target).parents('.ladder-element,.branch-logic')[0];
+    $(dragged).css("outline", "2px dashed blue");
+  } else {
+    $(dragged).css("outline", "");
+    dragged = null;
+  }
+});
+
 // Move objects to the trash
 
 $(".trash").on("dragenter", function (event) {
@@ -155,10 +166,18 @@ $(document).on(
 );
 
 $(document).on(
-  "drop",
+  "drop touchend",
   ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire-left",
   function (event) {
+    if (!dragged) {
+      return;
+    }
+    $(dragged).css("outline", "");
     var cloned = dragged.cloneNode(true);
+    var text = $(cloned).find('input[type=text]');
+    if (text) {
+      $(text[0]).prop('readonly', false);
+    }
     if ($(cloned).hasClass("xic-template")) {
       $(cloned).removeClass("xic-template");
       $(this).parent().parent().parent().before(cloned);
@@ -172,10 +191,18 @@ $(document).on(
 );
 
 $(document).on(
-  "drop",
+  "drop touchend",
   ".logic .ladder-element:not('.ote-template') > .ladder-element-bool > .circuit-element > .wire-right",
   function (event) {
+    if (!dragged) {
+      return;
+    }
+    $(dragged).css("outline", "");
     var cloned = dragged.cloneNode(true);
+    var text = $(cloned).find('input[type=text]');
+    if (text) {
+      $(text[0]).prop('readonly', false);
+    }
     if ($(cloned).hasClass("xic-template")) {
       $(cloned).removeClass("xic-template");
       $(this).parent().parent().parent().after(cloned);
@@ -194,6 +221,9 @@ $(document).on(
   "dragenter",
   ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
   function (event) {
+    if (!dragged) {
+      return;
+    }
     if ($(dragged).hasClass("branch-template")) {
       $(this).css("outline", "2px dashed blue");
     }
@@ -204,6 +234,9 @@ $(document).on(
   "dragleave",
   ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
   function (event) {
+    if (!dragged) {
+      return;
+    }
     if ($(dragged).hasClass("branch-template")) {
       $(this).css("outline", "");
     }
@@ -214,6 +247,9 @@ $(document).on(
   "dragover",
   ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
   function (event) {
+    if (!dragged) {
+      return;
+    }
     if ($(dragged).hasClass("branch-template")) {
       event.preventDefault();
     }
@@ -221,11 +257,19 @@ $(document).on(
 );
 
 $(document).on(
-  "drop",
+  "drop touchend",
   ".logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xic, .logic .branch-logic > .branch-rungs > .rung > .ladder-element > .ladder-element-bool > .circuit-element > .xio",
   function (event) {
     if ($(dragged).hasClass("branch-template")) {
+      if (!dragged) {
+        return;
+      }
+      $(dragged).css("outline", "");
       var cloned = dragged.cloneNode(true);
+      // var text = $(cloned).find('input[type=text]');
+      // if (text) {
+      //   $(text[0]).prop('readonly', false);
+      // }
       dragged = null;
       $(this).css("outline", "");
       // var s = $(this).parent().parent().parent().parent();
@@ -266,10 +310,18 @@ $(document).on(
 );
 
 $(document).on(
-  "drop",
+  "drop touchend",
   ".logic .branch-logic > .branch-rungs > .rung > .wire",
   function (event) {
+    if (!dragged) {
+      return;
+    }
+    $(dragged).css("outline", "");
     var cloned = dragged.cloneNode(true);
+    var text = $(cloned).find('input[type=text]');
+    if (text) {
+      $(text[0]).prop('readonly', false);
+    }
 
     if ($(cloned).hasClass("branch-template")) {
       if ($(this).parent().is(":last-child")) {
@@ -333,8 +385,16 @@ $(document).on("dragover", ".logic > .rungs > .rung > .wire", function (event) {
   event.preventDefault();
 });
 
-$(document).on("drop", ".logic > .rungs > .rung > .wire", function (event) {
+$(document).on("drop touchend", ".logic > .rungs > .rung > .wire", function (event) {
+  if (!dragged) {
+    return;
+  }
+  $(dragged).css("outline", "");
   var cloned = dragged.cloneNode(true);
+  var text = $(cloned).find('input[type=text]');
+  if (text) {
+    $(text[0]).prop('readonly', false);
+  }
   if ($(cloned).hasClass("ote-template")) {
     $(this).after(cloned);
   } else if (
@@ -357,6 +417,9 @@ $(document).on(
   "dragenter",
   ".logic > .rungs > .rung > .ote-template > .ladder-element-bool > .circuit-element > .wire-right",
   function (event) {
+    if (!dragged) {
+      return;
+    }
     if ($(dragged).hasClass("branch-template")) {
       $(this).css("outline", "2px dashed blue");
     }
@@ -380,9 +443,13 @@ $(document).on(
 );
 
 $(document).on(
-  "drop",
+  "drop touchend",
   ".logic > .rungs > .rung > .ote-template > .ladder-element-bool > .circuit-element > .wire-right",
   function (event) {
+    if (!dragged) {
+      return;
+    }
+    $(dragged).css("outline", "");
     var cloned = dragged.cloneNode(true);
     if ($(cloned).hasClass("branch-template")) {
       $(this).parent().parent().parent().after(cloned);
@@ -395,25 +462,32 @@ $(document).on(
 // Document ready
 $.ready(function () {});
 
-async function readFromJson() {
-  $("#json_file").trigger("click");
-  do {
-    var fileToLoad = document.getElementById("json_file").files[0];
-    // console.log(fileToLoad);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  } while (fileToLoad === undefined);
+function readFromJson(event) {
+  event.preventDefault();
+  var fileToLoad = document.getElementById("json_file").files[0];
+  if (fileToLoad === undefined) {
+    return;
+  }
 
   var fileReader = new FileReader();
   fileReader.onload = function (fileLoadedEvent) {
+    $(".rungs").css('display', 'none');
+
     var textFromFileLoaded = fileLoadedEvent.target.result;
     jsonObject = JSON.parse(textFromFileLoaded);
     // console.log(jsonObject);
 
     renderJson(jsonObject);
+    $(".rungs").css('display', 'block');
+    document.getElementById("json_file").value = '';
   };
 
   fileReader.readAsText(fileToLoad, "UTF-8");
 }
+
+$(document).on('focus', '#load_file', function(event) {
+  document.getElementById("json_file").value = '';
+});
 
 function renderJson(json) {
   $(".rungs").empty();

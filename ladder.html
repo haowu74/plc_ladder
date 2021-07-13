@@ -89,8 +89,11 @@
                   </div>
                 </div>
                 <button onclick="addRung()">Add Rung</button>
-                <button onclick="readFromJson()">Load</button>
-                <input type="file" id="json_file" accept=".json" hidden />
+                <button onclick="document.getElementById('json_file').click()" id="load_file">Load</button>
+                <form id="load-file-form" style="display: none" action="#" onsubmit="readFromJson(event)">
+                    <input type="file" id="json_file" accept=".json" onchange="document.getElementById('load-file-form').requestSubmit()" />
+                    <input type="submit">
+                </form>
                 <button onclick="saveToJson()">Save</button>
                 <div class="trash"><p>Trash</p></div>
               </div>
